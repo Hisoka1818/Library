@@ -1,0 +1,44 @@
+﻿@model Library.Web.DTOs.BookDTO
+@{
+    ViewData["Title"] = "Nuevo Libro";
+}
+
+<h1>Nuevo Libro</h1>
+
+<form asp-action="Create" method="post">
+    <div class="mb-3">
+        <label class="form-label">Title</label>
+        <input type="text" class="form-control" asp-for="Title" placeholder="Title..">
+        <span asp-validation-for="Title" class="text-danger"></span>
+    </div>
+    <div class="mb-3">
+        <label class="form-label">Description</label>
+        <input type="text" class="form-control" asp-for="Description" placeholder="Description..">
+        <span asp-validation-for="Description" class="text-danger"></span>
+    </div><div class="mb-3">
+        <label class="form-label">Fecha de publicacion</label>
+        <input type="text" class="form-control" asp-for="PublishDate">
+        <span asp-validation-for="PublishDate" class="text-danger"></span>
+    </div><div class="mb-3">
+        <label class="form-label">Editorial</label>
+        <input type="text" class="form-control" asp-for="Editorial" placeholder="Editorial..">
+        <span asp-validation-for="Editorial" class="text-danger"></span>
+    </div><div class="mb-3">
+        <div class="form-group">
+            <label asp-for="AuthorId" class="Control-label"></label>
+            <select asp-for="AuthorId" asp-items="Model.Authors" class="form-control"></select>
+            <span asp-validation-for="AuthorId" class="text-danger"></span>
+        </div>
+        
+    </div>
+    
+
+    <button btn btn-primary>Guardar</button>
+
+</form>
+
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+}
