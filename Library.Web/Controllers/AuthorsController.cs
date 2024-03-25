@@ -1,6 +1,9 @@
-﻿using Library.Web.Data;
+﻿using AspNetCoreHero.ToastNotification.Abstractions;
+using Library.Web.Core;
+using Library.Web.Data;
 using Library.Web.Data.Entities;
 using Library.Web.DTOs;
+using Library.Web.Services;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
@@ -10,18 +13,30 @@ namespace Library.Web.Controllers
     public class AuthorsController : Controller
     {
         private readonly DataContext _context;
+        private readonly IAuthorsService _authorsService;
+        public readonly INotyfService _notifyService;
 
-        public AuthorsController(DataContext context)
+        public AuthorsController(DataContext context, IAuthorsService authorsService, INotyfService notifyService)
         {
             _context = context;
+            _authorsService = authorsService;
+            _notifyService = notifyService;
         }
 
         [HttpGet]
 
         public async Task<IActionResult> Index()
         {
-            IEnumerable<Author> list = await _context.Authors.ToListAsync();
-            return View(list);
+          
+            Response<List<Author>> response = await _authorsService.GetListAsyc();
+
+            if (!response.IsSuccess)
+            {
+                _notifyService.Error((response.Message));
+                return RedirectToAction("Index", "Home");
+            }
+            _notifyService.Success(response.Message);
+            return View(response.Result);
         }
 
         [HttpGet]
